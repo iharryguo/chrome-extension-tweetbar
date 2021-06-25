@@ -13,14 +13,14 @@ var Sidebar = {
 	CSS_COMMON: "\
 		position:fixed;\
 		top:0px;\
-		right:0px;\
-		width:325px;\
+		left:0px;\
+		width:350px;\
 		height:100%;\
-		padding:8px;\
+		padding:0px;\
 		background:white;\
 		border-left: 2px solid #999;\
 		z-index:9999999999;\
-		overflow:scroll;\
+		overflow:hidden;\
 	",
 	
 	init : function(){
@@ -34,13 +34,15 @@ var Sidebar = {
 			// create new sidebar
 			var sidebar = document.createElement('div');
 			sidebar.id = Sidebar.DOM_ID;
-				
+			sidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%" height="100%"><p>Your browser does not support iframes.</p></iframe>';
+
 			Sidebar.sidebar = sidebar;
 			document.body.appendChild(Sidebar.sidebar);
 			
 		}
 		
 		Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
+		sidebar.style.opacity="0.6";
 		Sidebar.isOpen = true;
 		
 		return Sidebar.sidebar;
