@@ -5,8 +5,7 @@
  */
 
 var Sidebar = {
-		
-	DOM_ID: "my_sidebar",
+	DOM_ID: "fanyiqq_sidebar",
 	sidebar: null,
 	isOpen: false,
 	
@@ -28,24 +27,32 @@ var Sidebar = {
 	},
 		
 	open : function(request) {
-			
-		if (!Sidebar.sidebar){
-
+		var mySidebar = document.getElementById(Sidebar.DOM_ID);
+		if (mySidebar) {
+			var hideMargin = "-" + mySidebar.style.width;
+			if (mySidebar.style.marginLeft != hideMargin) {
+				mySidebar.style.marginLeft = hideMargin;
+			} else {
+				mySidebar.style.marginLeft = "0px";
+				// if marginLeft = -350px, display will be hidden
+				mySidebar.style.display = "block";
+				mySidebar.style.opacity="0.6";
+			}
+			return undefined;
+		} else if (!Sidebar.sidebar) {
 			// create new sidebar
 			var sidebar = document.createElement('div');
 			sidebar.id = Sidebar.DOM_ID;
-			sidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%" height="100%"><p>Your browser does not support iframes.</p></iframe>';
+			sidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%"\
+			  height="100%"><p>Your browser does not support iframes.</p></iframe>';
 
 			Sidebar.sidebar = sidebar;
 			document.body.appendChild(Sidebar.sidebar);
-			
+			Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
+			sidebar.style.opacity="0.6";
+			Sidebar.isOpen = true;
+			return Sidebar.sidebar;
 		}
-		
-		Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
-		sidebar.style.opacity="0.6";
-		Sidebar.isOpen = true;
-		
-		return Sidebar.sidebar;
 	},
 	
 	close : function(request) {

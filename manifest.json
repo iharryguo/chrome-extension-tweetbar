@@ -1,10 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "TwitterDev Tweetbar v0.0.1",
+  "name": "fanyi sidebar",
   "description": "Chrome extension to show relevant tweets while browsing YouTube",
   "version": "0.0.1",
   "options_page": "page.html?page=settings",
-
   "permissions": [
 	"tabs",
 	"webRequest",
@@ -15,7 +14,7 @@
 
 	"page_action": {
 		"default_icon": "img/bird.png",
-		"default_title": "Tweetbar"
+		"default_title": "fanyi sidebar"
 	},
 
   "background": {
