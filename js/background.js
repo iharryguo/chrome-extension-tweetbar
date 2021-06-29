@@ -11,16 +11,16 @@ if (chrome.runtime.onInstalled) {
 	});
 
 	// Put page action icon on all tabs
-	chrome.tabs.onUpdated.addListener(function(tabId) {
-		chrome.pageAction.show(tabId);
-	});
+	// chrome.tabs.onUpdated.addListener(function(tabId) {
+	// 	chrome.browserAction.show(tabId);
+	// });
 
-	chrome.tabs.getSelected(null, function(tab) {
-		chrome.pageAction.show(tab.id);
-	});
+	// chrome.tabs.getSelected(null, function(tab) {
+	// 	chrome.browserAction.show(tab.id);
+	// });
 
 	// Send request to current tab when page action is clicked
-	chrome.pageAction.onClicked.addListener(function(tab) {
+	chrome.browserAction.onClicked.addListener(function(tab) {
 		chrome.tabs.getSelected(null, function(tab) {
 			chrome.tabs.sendMessage(
 				tab.id,
@@ -32,6 +32,11 @@ if (chrome.runtime.onInstalled) {
 		});
 	});
 };
+
+// 监听本插件的图标被点击时
+// chrome.browserAction.onClicked.addListener(function (tab) {
+//   chrome.tabs.sendMessage(tab.id, { action: 'toggleSidebar' });
+// });
 
 // Because Twitter always here, all requests to insert tweets go here
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

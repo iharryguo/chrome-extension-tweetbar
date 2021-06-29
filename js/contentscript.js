@@ -36,21 +36,37 @@ var Sidebar = {
 				mySidebar.style.marginLeft = "0px";
 				// if marginLeft = -350px, display will be hidden
 				mySidebar.style.display = "block";
-				mySidebar.style.opacity="0.6";
+				mySidebar.style.opacity="0.8";
+				setTimeout(function() {
+					mySidebar.style.opacity="0.2";
+				} ,500);
 			}
 			return undefined;
 		} else if (!Sidebar.sidebar) {
 			// create new sidebar
-			var sidebar = document.createElement('div');
-			sidebar.id = Sidebar.DOM_ID;
-			sidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%"\
+			var mySidebar = document.createElement('div');
+			mySidebar.id = Sidebar.DOM_ID;
+			mySidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%"\
 			  height="100%"><p>Your browser does not support iframes.</p></iframe>';
 
-			Sidebar.sidebar = sidebar;
+			mySidebar.onmouseover = function() {
+				console.log('鼠标移入');
+				mySidebar.style.opacity="0.7";
+			}
+			mySidebar.onmouseout = function() {
+				console.log('鼠标移出');
+				mySidebar.style.opacity="0.2";
+			}
+
+			Sidebar.sidebar = mySidebar;
 			document.body.appendChild(Sidebar.sidebar);
 			Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
-			sidebar.style.opacity="0.6";
+			mySidebar.style.opacity="0.8";
 			Sidebar.isOpen = true;
+
+			setTimeout(function() {
+				Sidebar.sidebar.style.opacity="0.2";
+			} ,500);
 			return Sidebar.sidebar;
 		}
 	},
@@ -79,31 +95,21 @@ Sidebar.CSS_HIDDEN = Sidebar. CSS_COMMON + "display:none;";
 
 //prevent IFRAMES from loading this listener multiple times.
 if (!window.top.listenerLoaded) {
-	
 	console.log('listener loading');
-	
 	window.top.listenerLoaded = true;
-
 	Sidebar.init();
-	
-	chrome.extension.onMessage.addListener(function(request, sender, sendResponse){
-		
-		console.log('onMessage: ' + request.action)
-		
-		if (request.action == "showTweets") {
 
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		console.log('onMessage: ' + request.action)
+		if (request.action == "showTweets") {
 			var tweets = request.content; 
 			var html = tweets + Twitter.SCRIPT_TAG;
 			
 			var sidebar = Sidebar.open(request);
 			sidebar.innerHTML = html;
-
 		}
-		
-		if (request.action == "toggleSidebar") {
-
+		else if (request.action == "toggleSidebar") {
 			Sidebar.toggle(request);
-
 		}
 	});
 	

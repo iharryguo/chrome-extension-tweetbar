@@ -5,14 +5,18 @@
   "version": "0.0.1",
   "options_page": "page.html?page=settings",
   "permissions": [
-	"tabs",
-	"webRequest",
-    "storage",
-    "http://*/*",
-    "https://*/*"
+		"management",
+		"*://*/*",
+		"activeTab",
+		"tabs",
+		"contextMenus",
+		"webRequest",
+		"webRequestBlocking",
+		"storage",
+		"environment"
   ],
 
-	"page_action": {
+	"browser_action": {
 		"default_icon": "img/bird.png",
 		"default_title": "fanyi sidebar"
 	},
@@ -47,5 +51,15 @@
     }
   ],
   
-  "web_accessible_resources": ["page.html"]
+  "web_accessible_resources": ["page.html"],
+
+  "commands": {
+    "test": {
+      "description": "test hotkey",
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "MacCtrl+Shift+Y"
+      }
+    }
+  }
 }
