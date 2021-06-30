@@ -3165,10 +3165,6 @@ input[type="button"].btn-block {
   content: "\e114";
 }
 
-.glyphicon-retweet:before {
-  content: "\e115";
-}
-
 .glyphicon-shopping-cart:before {
   content: "\e116";
 }

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "fanyi sidebar",
-  "description": "Chrome extension to show relevant tweets while browsing YouTube",
+  "description": "Chrome extension to show sidebar on web page",
   "version": "0.0.1",
   "options_page": "page.html?page=settings",
   "permissions": [
@@ -12,21 +12,22 @@
     "contextMenus",
     "webRequest",
     "webRequestBlocking",
-    "storage",
-    "environment"
+    "storage"
   ],
   "browser_action": {
-    "default_icon": "img/bird.png",
+    "default_icon": "img/favicon.png",
     "default_title": "fanyi sidebar"
   },
+  "icons": {
+    "24": "img/favicon.png",
+    "64": "img/favicon64.png"
+	},
   "background": {
     "scripts": [
       "js/lib/jquery-1.10.1.min.js",
       "js/lib/bootstrap.js",
       "js/lib/async.js",
-      "js/lib/codebird.js",
       "js/common.js",
-      "js/store.js",
       "js/background.js"
     ],
     "persistent": true

@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
 
   <!--
@@ -11,46 +10,37 @@
      -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>TwitterDev Tweetbar</title>
-
+  <title>Setting Page</title>
   <link rel="stylesheet" href="css/theme/bootstrap.min.css">
   <link rel="stylesheet" href="css/theme/styles.css">
   <link rel="stylesheet" href="css/site.css">
-
 </head>
 
 <body>
   <div class="container">
-
     <div id="status" class="alert alert-success"></div>
     <div id="error" class="alert alert-danger"></div>
-
     <!-- Nav tabs -->
     <ul id="myTab" class="nav nav-tabs" role="tablist">
-      <li><img src='img/bird.png' class='icon'></li>
+      <li><img src='img/favicon.png' class='icon'></li>
       <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
     </ul>
 
     <div role="tabpanel" class="tab-pane" id="settings">
-
       <h3>
         Settings
         <button type="button" id="settings_save" class="btn btn-primary btn-sm pull-right">Save</button>
       </h3>
       <p>
-        Enter your settings to connect to Twitter and set Tweet view defaults.
+        Enter your settings.
       </p>
 
-
       <form class="form-horizontal" role="form">
-
-        <h4>Authentication</h4>
-
+        <h4>Setting Area 1</h4>
         <div class="panel panel-default">
           <div class="panel-body">
 
-            <!-- <div class="form-group">
+            <div class="form-group">
               <label for="inputEmail3" class="col-sm-3 control-label">API Key</label>
               <div class="col-sm-6">
                 <input id="apiKey" type="text" class="form-control" length="100"></input>
@@ -74,7 +64,7 @@
               <div class="col-sm-6">
                 <input id="accessTokenSecret" type="text" class="form-control" length="100"></input>
               </div>
-            </div> -->
+            </div>
 
             <div class="form-group auth_input auth_pin_holder">
               <label for="inputPassword3" class="col-sm-3 control-label">Authentication PIN</label>
@@ -86,19 +76,19 @@
             <div class="form-group">
               <label for="inputPassword3" class="col-sm-3 control-label"></label>
               <div class="col-sm-6">
-                <button type="button" class="btn btn-primary auth_input" id="auth_connect">Login via Twitter</button>
+                <button type="button" class="btn btn-primary auth_input" id="auth_connect">Setting</button>
                 <div class="auth_input auth_pin_holder">
                   <button type="button" class="btn btn-primary" id="auth_pin">Submit PIN</button>
                   &nbsp; or <a href="#" id="auth_restart">Start Over</a>
                 </div>
-                <button type="button" class="btn auth_input" id="auth_disconnect">Disconnect from Twitter</button>
+                <button type="button" class="btn auth_input" id="auth_disconnect">Setting</button>
               </div>
             </div>
 
           </div>
         </div>
 
-        <h4>Embed Defaults</h4>
+        <h4>Setting Area 2</h4>
 
         <div class="panel panel-default">
           <div class="panel-body">
@@ -125,9 +115,7 @@
   <script src="js/lib/jquery-1.10.1.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.4.custom.js"></script>
   <script src="js/lib/bootstrap.js"></script>
-  <script src="js/lib/mustache.js"></script>
   <script src="js/lib/async.js"></script>
-  <script src="js/store.js"></script>
   <script src="js/common.js"></script>
   <script src="js/page.js"></script>
 

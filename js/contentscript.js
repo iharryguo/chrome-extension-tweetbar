@@ -41,21 +41,24 @@ var Sidebar = {
         }, 1000);
       }
       return undefined;
-    } else if (!Sidebar.sidebar) {
+    } else {
       // create new sidebar
       var mySidebar = document.createElement('div');
       mySidebar.id = Sidebar.DOM_ID;
       mySidebar.innerHTML = '<iframe src ="https://fanyi.qq.com/" width="100%"\
         height="100%"><p>Your browser does not support iframes.</p></iframe>';
 
-      mySidebar.onmouseover = function () {
-        console.log('鼠标移入');
-        mySidebar.style.opacity = "0.7";
-      }
-      mySidebar.onmouseout = function () {
-        console.log('鼠标移出');
-        mySidebar.style.opacity = "0.2";
-      }
+      var funMouseMotion = function (event) {
+        if (event.type == "mousemove") {
+          console.log('鼠标移入');
+          mySidebar.style.opacity = "0.7";
+        } else if (event.type == "mouseout") {
+          console.log('鼠标移出');
+          mySidebar.style.opacity = "0.2";
+        }
+      };
+      mySidebar.onmousemove = funMouseMotion;
+      mySidebar.onmouseout = funMouseMotion;
 
       Sidebar.sidebar = mySidebar;
       document.body.appendChild(Sidebar.sidebar);
@@ -104,14 +107,7 @@ if (!window.top.listenerLoaded) {
 
   chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log('onMessage: ' + request.action)
-    if (request.action == "showTweets") {
-      var tweets = request.content;
-      var html = tweets + Twitter.SCRIPT_TAG;
-
-      var sidebar = Sidebar.open(request);
-      sidebar.innerHTML = html;
-    }
-    else if (request.action == "toggleSidebar") {
+    if (request.action == "toggleSidebar") {
       Sidebar.toggle(request);
     }
   });
