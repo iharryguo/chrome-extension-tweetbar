@@ -10,8 +10,8 @@
 }
 
 #collectionModal div#dialog {
-	 top: 50%;
-	 left: 50%;
+   top: 50%;
+   left: 50%;
      width:480px;
      margin: 100px auto;
      background-color: #fff;
@@ -22,39 +22,39 @@
 }
 
 #collectionModal div#header {
-	text-align: center;
-	margin: 0px;
-	padding: 16px;
+  text-align: center;
+  margin: 0px;
+  padding: 16px;
 }
 
 #collectionModal div#contents {
-	padding: 8px 16px;
-	border-top: 1px solid #e1e8ed;
-	border-bottom: 1px solid #e1e8ed;
+  padding: 8px 16px;
+  border-top: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
 }
 
 #collectionModal input[type=checkbox] {
-	transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 #collectionModal div#footer {
-	min-height: 30px;
-	height: auto;
-	vertical-align: middle;
-	margin: 0px;
-	padding: 16px;
+  min-height: 30px;
+  height: auto;
+  vertical-align: middle;
+  margin: 0px;
+  padding: 16px;
 }
 
 #collectionModal a.btn {
-	margin-left: 6px;
+  margin-left: 6px;
 }
 
 #collectionModal p {
-	margin: 8px 0px;
-	font-size: 1.1em;
+  margin: 8px 0px;
+  font-size: 1.1em;
 }
 
 #collectionModalList li {
-	cursor: pointer;
-	margin: 10px 0px 0px 8px;
+  cursor: pointer;
+  margin: 10px 0px 0px 8px;
 }

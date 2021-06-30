@@ -1,131 +1,127 @@
 <!doctype html>
 <html>
-  <head>
 
-    <!--
+<head>
+
+  <!--
       - JavaScript and HTML must be in separate files: see our Content Security
       - Policy documentation[1] for details and explanation.
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
-  
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <title>TwitterDev Tweetbar</title>
 
-    <link rel="stylesheet" href="css/theme/bootstrap.min.css">
-    <link rel="stylesheet" href="css/theme/styles.css">
-    <link rel="stylesheet" href="css/site.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  </head>
-  <body>
+  <title>TwitterDev Tweetbar</title>
+
+  <link rel="stylesheet" href="css/theme/bootstrap.min.css">
+  <link rel="stylesheet" href="css/theme/styles.css">
+  <link rel="stylesheet" href="css/site.css">
+
+</head>
+
+<body>
   <div class="container">
-  
+
     <div id="status" class="alert alert-success"></div>
     <div id="error" class="alert alert-danger"></div>
-    
-	<!-- Nav tabs -->
-	<ul id="myTab" class="nav nav-tabs" role="tablist">
-	  <li><img src='img/bird.png' class='icon'></li>
-	  <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
-	</ul>
-	
-	  <div role="tabpanel" class="tab-pane" id="settings">
-	  
-	  	<h3>
-	  		Settings
-	  		<button type="button" id="settings_save" class="btn btn-primary btn-sm pull-right">Save</button>
-	  	</h3>
-	  	<p>
-	  		Enter your settings to connect to Twitter and set Tweet view defaults.
-	  	</p>
-	  	
-	  	
-		<form class="form-horizontal" role="form">
-		
-	  	  <h4>Authentication</h4> 
-	
-			<div class="panel panel-default">
-			  <div class="panel-body">
-			  
-<!--			  
-				  <div class="form-group">
-				    <label for="inputEmail3" class="col-sm-3 control-label">API Key</label>
-				    <div class="col-sm-6">
-				      <input id="apiKey" type="text" class="form-control" length="100"></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="inputPassword3" class="col-sm-3 control-label">API Secret</label>
-				    <div class="col-sm-6">
-					  	<input id="apiSecret" type="text" class="form-control" length="100"></input>
-				    </div>
-				  </div>
 
-				  <div class="form-group">
-				    <label for="inputEmail3" class="col-sm-3 control-label">Access Token</label>
-				    <div class="col-sm-6">
-				  		<input id="accessToken" type="text" class="form-control" length="100"></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="inputPassword3" class="col-sm-3 control-label">Access Token Secret</label>
-				    <div class="col-sm-6">
-				  		<input id="accessTokenSecret" type="text" class="form-control" length="100"></input>
-				    </div>
-				  </div>
--->
-				  
-				  <div class="form-group auth_input auth_pin_holder">
-				    <label for="inputPassword3" class="col-sm-3 control-label">Authentication PIN</label>
-				    <div class="col-sm-6">
-				  		<input id="authenticationPin" type="text" class="form-control" length="100"></input>
-				    </div>
-				  </div>
-				  
-				  <div class="form-group">
-				    <label for="inputPassword3" class="col-sm-3 control-label"></label>
-				    <div class="col-sm-6">
-				  		<button type="button" class="btn btn-primary auth_input" id="auth_connect">Login via Twitter</button>
-				  		<div class="auth_input auth_pin_holder">
-				  			<button type="button" class="btn btn-primary" id="auth_pin">Submit PIN</button>
-				  			&nbsp; or <a href="#" id="auth_restart">Start Over</a>  
-			  			</div>
-				  		<button type="button" class="btn auth_input" id="auth_disconnect">Disconnect from Twitter</button>
-				    </div>
-				  </div>
-				  
-			  </div>
-			</div>
-	
-	  	  <h4>Embed Defaults</h4> 
-		  
-			<div class="panel panel-default">
-			  <div class="panel-body">
-			  
-				  <div class="form-group">
-				    <label for="inputPassword3" class="col-sm-3 control-label">Show Media</label>
-				    <div class="col-sm-6">
-				  		<input id="embedShowMedia" type="checkbox"></input> 
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="inputPassword3" class="col-sm-3 control-label">Show Conversation</label>
-				    <div class="col-sm-6">
-				  		<input id="embedShowConversation" type="checkbox"></input> 
-				    </div>
-				  </div>
-		  
-			  </div>
-			</div>
-			
-		</form>
-	  
-	  </div>
-	</div>
-  
+    <!-- Nav tabs -->
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+      <li><img src='img/bird.png' class='icon'></li>
+      <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+    </ul>
+
+    <div role="tabpanel" class="tab-pane" id="settings">
+
+      <h3>
+        Settings
+        <button type="button" id="settings_save" class="btn btn-primary btn-sm pull-right">Save</button>
+      </h3>
+      <p>
+        Enter your settings to connect to Twitter and set Tweet view defaults.
+      </p>
+
+
+      <form class="form-horizontal" role="form">
+
+        <h4>Authentication</h4>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">API Key</label>
+              <div class="col-sm-6">
+                <input id="apiKey" type="text" class="form-control" length="100"></input>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-3 control-label">API Secret</label>
+              <div class="col-sm-6">
+                <input id="apiSecret" type="text" class="form-control" length="100"></input>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Access Token</label>
+              <div class="col-sm-6">
+                <input id="accessToken" type="text" class="form-control" length="100"></input>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-3 control-label">Access Token Secret</label>
+              <div class="col-sm-6">
+                <input id="accessTokenSecret" type="text" class="form-control" length="100"></input>
+              </div>
+            </div> -->
+
+            <div class="form-group auth_input auth_pin_holder">
+              <label for="inputPassword3" class="col-sm-3 control-label">Authentication PIN</label>
+              <div class="col-sm-6">
+                <input id="authenticationPin" type="text" class="form-control" length="100"></input>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-3 control-label"></label>
+              <div class="col-sm-6">
+                <button type="button" class="btn btn-primary auth_input" id="auth_connect">Login via Twitter</button>
+                <div class="auth_input auth_pin_holder">
+                  <button type="button" class="btn btn-primary" id="auth_pin">Submit PIN</button>
+                  &nbsp; or <a href="#" id="auth_restart">Start Over</a>
+                </div>
+                <button type="button" class="btn auth_input" id="auth_disconnect">Disconnect from Twitter</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <h4>Embed Defaults</h4>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-3 control-label">Show Media</label>
+              <div class="col-sm-6">
+                <input id="embedShowMedia" type="checkbox"></input>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-3 control-label">Show Conversation</label>
+              <div class="col-sm-6">
+                <input id="embedShowConversation" type="checkbox"></input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-  
+  </div>
+
   <script src="js/lib/jquery-1.10.1.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.4.custom.js"></script>
   <script src="js/lib/bootstrap.js"></script>
@@ -135,37 +131,36 @@
   <script src="js/common.js"></script>
   <script src="js/page.js"></script>
 
-<script id="template_collection_row" type="text/template">
+  <script id="template_collection_row" type="text/template">
   {{#collections}}
   <tr class='row_{{id}}'>
-  	<td><a class='collection' data-id='{{id}}' data-collection-name='{{name}}'>{{name}}</a></td>
-  	<td><span class='collection' data-id='{{id}}' data-collection-name='{{name}}'>{{description}}</span></td>
-  	<td>
-  		<button type='button' data-id='{{id}}' data-collection-name='{{name}}' class='btn btn-primary btn-xs collection'>View Tweets</button>
-  		<button type='button' data-id='{{id}}' class='btn btn-xs collection_delete'>Delete</button>
-	</td>
+    <td><a class='collection' data-id='{{id}}' data-collection-name='{{name}}'>{{name}}</a></td>
+    <td><span class='collection' data-id='{{id}}' data-collection-name='{{name}}'>{{description}}</span></td>
+    <td>
+      <button type='button' data-id='{{id}}' data-collection-name='{{name}}' class='btn btn-primary btn-xs collection'>View Tweets</button>
+      <button type='button' data-id='{{id}}' class='btn btn-xs collection_delete'>Delete</button>
+  </td>
   </tr>
   {{/collections}}
 </script>
 
-<script id="template_tweet_row" type="text/template">
+  <script id="template_tweet_row" type="text/template">
   {{#timeline}}
   <tr class='row_{{tweet.id_str}}'>
-  	<td><img src='img/grippy_large.png'></td>
-  	<td><input type='checkbox' class='tweet_check' data-id='{{tweet.id_str}}'></td>
-  	<td>
-  		<strong>{{tweet.user.name}}</strong> <a href='{{tweet.user.url}}' class='external_url'>@{{tweet.user.screen_name}}</a> &middot; <a href='{{tweet.url}}' class='external_url'>{{tweet.date}}</a>
-  		<br>{{tweet.text}}
-  		<BR>{{#tweet.entities.media}}<a href='{{tweet.url}}' class='external_url'><div class='tweet_image'><img src='{{media_url}}' class='tweet_image'></div></a>{{/tweet.entities.media}}</a>
-	</td>
-  	<td>
-  		<button type='button' data-id='{{tweet.id_str}}' class='btn btn-primary btn-xs tweet_embed'>Embed</button>
-  		<button type='button' data-id='{{tweet.id_str}}' data-collection-id='{{collection_id}}' class='btn btn-xs tweet_remove'>Remove</button>
-	</td>
+    <td><img src='img/grippy_large.png'></td>
+    <td><input type='checkbox' class='tweet_check' data-id='{{tweet.id_str}}'></td>
+    <td>
+      <strong>{{tweet.user.name}}</strong> <a href='{{tweet.user.url}}' class='external_url'>@{{tweet.user.screen_name}}</a> &middot; <a href='{{tweet.url}}' class='external_url'>{{tweet.date}}</a>
+      <br>{{tweet.text}}
+      <BR>{{#tweet.entities.media}}<a href='{{tweet.url}}' class='external_url'><div class='tweet_image'><img src='{{media_url}}' class='tweet_image'></div></a>{{/tweet.entities.media}}</a>
+  </td>
+    <td>
+      <button type='button' data-id='{{tweet.id_str}}' class='btn btn-primary btn-xs tweet_embed'>Embed</button>
+      <button type='button' data-id='{{tweet.id_str}}' data-collection-id='{{collection_id}}' class='btn btn-xs tweet_remove'>Remove</button>
+  </td>
   </tr>
   {{/timeline}}
 </script>
-    	
-  </body>
-</html>
+</body>
 
+</html>

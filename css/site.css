@@ -10,35 +10,35 @@
   }  
 
   .visible {
-  	display: block;
+    display: block;
   }
 
   .hidden {
-  	display: none;
+    display: none;
   }
   
   .nav img {
-  	margin: 10px 14px 0px 10px;
+    margin: 10px 14px 0px 10px;
   }
   
   .breadcrumb {
-	padding: 0px; 
-	margin-bottom: 0px;
-	list-style: none;
-	background-color: transparent; 
-	border-radius: 4px;
+  padding: 0px; 
+  margin-bottom: 0px;
+  list-style: none;
+  background-color: transparent; 
+  border-radius: 4px;
   }
   
   #embedTemplate {
-  	width:100%; 
-  	height: 80px; 
-  	font-size: .8em;
+    width:100%; 
+    height: 80px; 
+    font-size: .8em;
   }
   
   .spinner {
-  	height: 40px;
-  	width: 100%;
-  	text-align: center;
+    height: 40px;
+    width: 100%;
+    text-align: center;
   }
   
   .spinner img {
@@ -46,7 +46,7 @@
   }
   
   .norows {
-  	text-align: center;
+    text-align: center;
   }
   
   div.tweet_image {
@@ -57,7 +57,7 @@
     margin: 6px 0px;
     border: 1px solid #ccc;
   }
-	
+  
   /* Set the image to fill its parent and make transparent */
   img.tweet_image {
     position: relative; /* allows repositioning */
@@ -68,15 +68,15 @@
   }
 
   img.external {
-  	opacity: 0.5;
-  	margin: 0px 0px 0px 6px;
+    opacity: 0.5;
+    margin: 0px 0px 0px 6px;
   }
   
   img.tutorial {
-  	border: 1px solid #aaa;
-  	background-color: #eee;
-  	padding: 12px;
-  	margin: 18px auto 18px 0px;
-  	width: 65%;
-  	display:block;
+    border: 1px solid #aaa;
+    background-color: #eee;
+    padding: 12px;
+    margin: 18px auto 18px 0px;
+    width: 65%;
+    display:block;
   }

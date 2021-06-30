@@ -6,245 +6,214 @@
 // BUGBUG:
 // - Copy to clipboard functionality!
 
-$(document).ready(function() {
-
-	Settings.init(function(){
-		console.log("Settings.init complete");
-		Page.init();
-	}, function() {
-		URL.open("settings");
-	});
-
+$(document).ready(function () {
+  Settings.init(function () {
+    console.log("Settings.init complete");
+    Page.init();
+  }, function () {
+    URL.open("settings");
+  });
 });
 
-$(document).error(function(){
-	Page.setError("Some error.");
+$(document).error(function () {
+  Page.setError("Some error.");
 });
 
 var Page = {
+  init: function () {
+    $('#status').hide();
+    $('#error').hide();
 
-	init : function() {
+    SettingsPage.init();
+    Page.setDefault();
+  },
 
-		$('#status').hide();
-		$('#error').hide();
+  setDefault: function () {
+    var isAuthenticated = Settings.properties['accessToken'];
+    var authState = Settings.properties['authState'];
+    if (isAuthenticated) {
+      SettingsPage.setState(isAuthenticated, false);
+    } else if (authState && authState == Settings.AUTH_STATE_PIN) {
+      SettingsPage.setState(false, true);
+    } else {
+      SettingsPage.setState(isAuthenticated, false);
+    }
 
-		SettingsPage.init();
-		Page.setDefault();
+    SettingsPage.showTab();
+  },
 
-	},
+  setStatus: function (text) {
+    $('#status').html(text).show();
+    setTimeout(function () {
+      $('#status').fadeOut();
+    }, Settings.UI_TIMEOUT);
+  },
 
-	setDefault : function() {
+  setError: function (text) {
+    $('#error').html(text).show();
+    setTimeout(function () {
+      $('#error').fadeOut();
+    }, Settings.UI_TIMEOUT);
+  },
 
-		var isAuthenticated = Settings.properties['accessToken'];
-		var authState = Settings.properties['authState'];
-		if (isAuthenticated){
-			SettingsPage.setState(isAuthenticated, false);
-		} else if (authState && authState == Settings.AUTH_STATE_PIN){
-			SettingsPage.setState(false, true);
-		} else {
-			SettingsPage.setState(isAuthenticated, false);
-		}
-
-		SettingsPage.showTab();
-
-	},
-
-	setStatus : function(text) {
-
-		$('#status').html(text).show();
-		setTimeout(function() {
-			$('#status').fadeOut();
-		}, Settings.UI_TIMEOUT);
-	},
-
-	setError : function(text) {
-
-		$('#error').html(text).show();
-		setTimeout(function() {
-			$('#error').fadeOut();
-		}, Settings.UI_TIMEOUT);
-	},
-
-	setSpinner : function(id){
-		$(id).html("<div class='spinner'><img src='img/spinner.gif'></div>");
-	},
+  setSpinner: function (id) {
+    $(id).html("<div class='spinner'><img src='img/spinner.gif'></div>");
+  },
 
 }
 var SettingsPage = {
+  init: function () {
+    $("#advanced_options").hide();
+    SettingsPage.load(function () { });
+    $(document).on('click', '#settings_save', function (e) {
+      SettingsPage.save();
+      return false;
+    });
 
-	init : function() {
-		
-		$("#advanced_options").hide();
+    $(document).on('click', '#auth_connect', function (e) {
+      var request = {
+        type: "background.twitterRequestToken",
+      };
 
-		SettingsPage.load(function() {});
+      chrome.runtime.sendMessage(request, function (response) {
+        var properties = {
+          authState: Settings.AUTH_STATE_PIN
+        };
+        Settings.save(properties, function () {
+          SettingsPage.setState(false, true);
+          Page.setStatus("Please enter PIN below.");
+        });
+      });
 
-		$(document).on('click', '#settings_save', function(e) {
-			SettingsPage.save();
-			return false;
-		});
+      return false;
+    });
 
-		$(document).on('click', '#auth_connect', function(e) {
-			
-			var request = {
-					type : "background.twitterRequestToken",
-				};
+    $(document).on('click', '#auth_pin', function (e) {
+      var request = {
+        type: "background.twitterAccessToken",
+        pin: $('#authenticationPin').val()
+      };
 
-			chrome.runtime.sendMessage(request, function(response) {
-				var properties = {
-						authState : Settings.AUTH_STATE_PIN
-					};
-				Settings.save(properties, function(){
-					SettingsPage.setState(false, true);
-					Page.setStatus("Please enter PIN below.");
-				});
-			});
-			
-			return false;
-		});
+      chrome.runtime.sendMessage(request, function (response) {
+        var success = response.success;
+        var status = response.status;
+        if (success) {
 
-		$(document).on('click', '#auth_pin', function(e) {
-			
-			var request = {
-					type : "background.twitterAccessToken",
-					pin : $('#authenticationPin').val()
-				};
+          var properties = {
+            authState: Settings.AUTH_STATE_COMPETED
+          };
+          Settings.save(properties, function () {
+            Page.setStatus(status);
+            SettingsPage.setState(true, false);
 
-			chrome.runtime.sendMessage(request, function(response) {
-				var success = response.success;
-				var status = response.status; 
-				if (success){
+            URL.open("tutorial");
+          });
+        } else {
+          Page.setError(status);
+          SettingsPage.setState(false, false);
+        }
+      });
+      return false;
+    });
 
-					var properties = {
-							authState : Settings.AUTH_STATE_COMPETED
-						};
-					Settings.save(properties, function(){
-						Page.setStatus(status);
-						SettingsPage.setState(true, false);
-						
-						URL.open("tutorial");
-					});
+    $(document).on('click', '#auth_restart', function (e) {
+      var properties = {
+        authState: Settings.AUTH_STATE_LOGIN
+      };
+      Settings.save(properties, function () {
+        SettingsPage.setState(false, false);
+      });
 
-				} else {
-					Page.setError(status);
-					SettingsPage.setState(false, false);
-				}
-			});
-			
-			return false;
-		});
-		
-		$(document).on('click', '#auth_restart', function(e) {
-			
-			var properties = {
-					authState : Settings.AUTH_STATE_LOGIN
-				};
-			Settings.save(properties, function(){
-				SettingsPage.setState(false, false);
-			});
-			
-			return false;
-		});
-		
-		$(document).on('click', '#auth_disconnect', function(e) {
+      return false;
+    });
 
-			var properties = [
-				'accessToken',
-				'accessTokenSecret'
-			]
-			Settings.remove(properties, function() {
-				var request = {
-						type : "background.reloadSettings",
-					};
+    $(document).on('click', '#auth_disconnect', function (e) {
+      var properties = [
+        'accessToken',
+        'accessTokenSecret'
+      ]
+      Settings.remove(properties, function () {
+        var request = {
+          type: "background.reloadSettings",
+        };
 
-				chrome.runtime.sendMessage(request, function(response) {
-					Page.setStatus("Settings saved.");
-					SettingsPage.setState(false, false);
-				});
-			});
-			
-		});
-		
-		$(document).on("click", "#advanced_options_toggle", function() {
-			$("#advanced_options_toggle").hide();
-			$("#advanced_options").fadeIn();
-		});
+        chrome.runtime.sendMessage(request, function (response) {
+          Page.setStatus("Settings saved.");
+          SettingsPage.setState(false, false);
+        });
+      });
 
+    });
 
-	},
+    $(document).on("click", "#advanced_options_toggle", function () {
+      $("#advanced_options_toggle").hide();
+      $("#advanced_options").fadeIn();
+    });
+  },
 
-	showTab : function() {
-		$('#myTab a[href="#settings"]').tab('show');
-	},
-	
-	setState : function(isAuthenticated, isWaitingForPin) {
-		$(".auth_input").hide();
-		if (isAuthenticated){
-			$("#auth_disconnect").show();
-		} else if (isWaitingForPin){
-			$(".auth_pin_holder").show();
-		} else {
-			$("#auth_connect").show();
-		}
-	},
+  showTab: function () {
+    $('#myTab a[href="#settings"]').tab('show');
+  },
 
-	load : function(callback) {
-		Object.keys(Settings.properties).forEach(function(key) {
+  setState: function (isAuthenticated, isWaitingForPin) {
+    $(".auth_input").hide();
+    if (isAuthenticated) {
+      $("#auth_disconnect").show();
+    } else if (isWaitingForPin) {
+      $(".auth_pin_holder").show();
+    } else {
+      $("#auth_connect").show();
+    }
+  },
 
-			var value = Settings.properties[key];
+  load: function (callback) {
+    Object.keys(Settings.properties).forEach(function (key) {
+      var value = Settings.properties[key];
+      var id = "#" + key;
+      var el = $(id);
 
-			var id = "#" + key;
-			var el = $(id);
-			
-			if (el.is(':checkbox')){
-				$(id).prop('checked', value);
-			} else {
-				$(id).val(value);
-			}
-			
+      if (el.is(':checkbox')) {
+        $(id).prop('checked', value);
+      } else {
+        $(id).val(value);
+      }
+    });
 
-		});
+    if (callback) {
+      callback();
+    }
+  },
 
-		if (callback) {
-			callback();
-		}
-	},
+  save: function (callback) {
+    var properties = {};
+    for (var i = 0; i < Settings.PROPERTIES.length; i++) {
+      var key = Settings.PROPERTIES[i];
+      var id = "#" + key;
+      var el = $(id);
 
-	save : function(callback) {
+      var val = '';
+      if (el.is(':checkbox')) {
+        val = el.prop('checked') == true;
+      } else {
+        val = el.val();
+      }
+      properties[key] = val;
+    }
 
-		var properties = {};
+    // console.log('SettingsPage.save: ' + JSON.stringify(properties));
 
-		for ( var i = 0; i < Settings.PROPERTIES.length; i++) {
-			
-			var key = Settings.PROPERTIES[i];
-			var id = "#" + key;
-			var el = $(id);
-			
-			var val = '';
-			if (el.is(':checkbox')){
-				val = el.prop('checked') == true;
-			} else {
-				val = el.val();
-			}
+    Settings.save(properties, function () {
+      var request = {
+        type: "background.reloadSettings",
+      };
 
-			properties[key] = val;
-		}
+      chrome.runtime.sendMessage(request, function (response) {
+        Page.setStatus("Settings saved.");
+      });
+    });
 
-//		console.log('SettingsPage.save: ' + JSON.stringify(properties));
-
-		Settings.save(properties, function() {
-			var request = {
-					type : "background.reloadSettings",
-			};
-
-			chrome.runtime.sendMessage(request, function(response) {
-				Page.setStatus("Settings saved.");
-			});
-		});
-
-		if (callback) {
-			callback();
-		}
-
-	},
-
+    if (callback) {
+      callback();
+    }
+  },
 }

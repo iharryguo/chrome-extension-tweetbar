@@ -3,34 +3,33 @@
  * saves Settings.
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
+  $("#success").hide();
+  $("#failure").hide();
 
-	$("#success").hide();
-	$("#failure").hide();
+  var accessToken = QueryString.get("1", null);
+  var accessTokenSecret = QueryString.get("2", null);
 
-	var accessToken = QueryString.get("1", null);
-	var accessTokenSecret = QueryString.get("2", null);
-	
-	if (!accessToken || !accessTokenSecret){
-		$("#failure").show();
-		return;
-	}
-	
-	var properties = {
-		'accessToken' : accessToken,
-		'accessTokenSecret' : accessTokenSecret,
-	}
+  if (!accessToken || !accessTokenSecret) {
+    $("#failure").show();
+    return;
+  }
 
-	// alert(JSON.stringify(properties));
+  var properties = {
+    'accessToken': accessToken,
+    'accessTokenSecret': accessTokenSecret,
+  }
 
-	Settings.save(properties, function() {
-		var request = {
-			type : "background.reloadSettings",
-		};
+  // alert(JSON.stringify(properties));
 
-		chrome.runtime.sendMessage(request, function(response) {
-			$("#success").show();
-		});
-	});
+  Settings.save(properties, function () {
+    var request = {
+      type: "background.reloadSettings",
+    };
+
+    chrome.runtime.sendMessage(request, function (response) {
+      $("#success").show();
+    });
+  });
 
 });

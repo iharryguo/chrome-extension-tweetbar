@@ -5,54 +5,53 @@
   "version": "0.0.1",
   "options_page": "page.html?page=settings",
   "permissions": [
-		"management",
-		"*://*/*",
-		"activeTab",
-		"tabs",
-		"contextMenus",
-		"webRequest",
-		"webRequestBlocking",
-		"storage",
-		"environment"
+    "management",
+    "*://*/*",
+    "activeTab",
+    "tabs",
+    "contextMenus",
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "environment"
   ],
-
-	"browser_action": {
-		"default_icon": "img/bird.png",
-		"default_title": "fanyi sidebar"
-	},
-
+  "browser_action": {
+    "default_icon": "img/bird.png",
+    "default_title": "fanyi sidebar"
+  },
   "background": {
-  	"scripts": [
-	    "js/lib/jquery-1.10.1.min.js",
-	    "js/lib/bootstrap.js",
-	    "js/lib/async.js",
-	    "js/lib/codebird.js",
-	    "js/common.js",
-	    "js/store.js",
-	    "js/background.js"
-  	],
+    "scripts": [
+      "js/lib/jquery-1.10.1.min.js",
+      "js/lib/bootstrap.js",
+      "js/lib/async.js",
+      "js/lib/codebird.js",
+      "js/common.js",
+      "js/store.js",
+      "js/background.js"
+    ],
     "persistent": true
   },
-
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": [
+        "*://*/*"
+      ],
       "all_frames": true,
-      "run_at": "document_end", 
+      "run_at": "document_end",
       "js": [
-      	"js/lib/jquery-1.10.1.min.js",
-	    "js/lib/async.js",
-      	"js/common.js", 
-      	"js/contentscript.js"
-  	  ],
+        "js/lib/jquery-1.10.1.min.js",
+        "js/lib/async.js",
+        "js/common.js",
+        "js/contentscript.js"
+      ],
       "css": [
-      	"css/contentscript.css"
-  	  ]
+        "css/contentscript.css"
+      ]
     }
   ],
-  
-  "web_accessible_resources": ["page.html"],
-
+  "web_accessible_resources": [
+    "page.html"
+  ],
   "commands": {
     "test": {
       "description": "test hotkey",
