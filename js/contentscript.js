@@ -7,7 +7,6 @@
 var Sidebar = {
   DOM_ID: "fanyiqq_sidebar",
   sidebar: null,
-  isOpen: false,
 
   CSS_COMMON: "\
     position:fixed;\
@@ -25,15 +24,14 @@ var Sidebar = {
   init: function () {
   },
 
-  open: function (request) {
+  toggle: function (request) {
     var mySidebar = document.getElementById(Sidebar.DOM_ID);
     if (mySidebar) {
-      var hideMargin = "-" + mySidebar.style.width;
-      if (mySidebar.style.marginLeft != hideMargin) {
-        mySidebar.style.marginLeft = hideMargin;
+      if (mySidebar.style.display != "none") {
+        // hide side bar
+        mySidebar.style.display = "none";
       } else {
-        mySidebar.style.marginLeft = "0px";
-        // if marginLeft = -350px, display will be hidden
+        // show side bar
         mySidebar.style.display = "block";
         mySidebar.style.opacity = "0.8";
         setTimeout(function () {
@@ -64,7 +62,6 @@ var Sidebar = {
       document.body.appendChild(Sidebar.sidebar);
       Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
       mySidebar.style.opacity = "0.8";
-      Sidebar.isOpen = true;
 
       setTimeout(function () {
         // var iframeWindow = document.getElementById("fanyiqq_sidebar_iframe").contentWindow;
@@ -78,22 +75,6 @@ var Sidebar = {
       return Sidebar.sidebar;
     }
   },
-
-  close: function (request) {
-    if (Sidebar.sidebar) {
-      Sidebar.sidebar.style.cssText = Sidebar.CSS_HIDDEN;
-    }
-
-    Sidebar.isOpen = false;
-  },
-
-  toggle: function (request) {
-    if (Sidebar.isOpen) {
-      this.close(request);
-    } else {
-      this.open(request);
-    }
-  }
 }
 
 Sidebar.CSS_VISIBLE = Sidebar.CSS_COMMON + "display:block;";
@@ -107,8 +88,8 @@ if (!window.top.listenerLoaded) {
 
   chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log('onMessage: ' + request.action)
-    if (request.action == "toggleSidebar") {
-      Sidebar.toggle(request);
+    if (request.action == "page-show-fanyi-inpage") {
+      Sidebar.open(request);
     }
   });
 

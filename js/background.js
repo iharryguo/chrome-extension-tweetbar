@@ -18,25 +18,41 @@ if (chrome.runtime.onInstalled) {
   // chrome.tabs.getSelected(null, function(tab) {
   //   chrome.browserAction.show(tab.id);
   // });
-
-  // Send request to current tab when page action is clicked
-  chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.getSelected(null, function (tab) {
-      chrome.tabs.sendMessage(
-        tab.id,
-        { action: "toggleSidebar" },
-        function (response) {
-          console.log(response);
-        }
-      );
-    });
-  });
 };
 
 // 监听本插件的图标被点击时
 // chrome.browserAction.onClicked.addListener(function (tab) {
-//   chrome.tabs.sendMessage(tab.id, { action: 'toggleSidebar' });
+//   chrome.tabs.getSelected(null, function (tab) {
+//     console.log("chrome.browserAction.onClicked url:" + tab.url);
+//     chrome.tabs.sendMessage(
+//       tab.id,
+//       { action: "page-show-fanyi-inpage" },
+//       function (response) {
+//         if (response)
+//           console.log(response);
+//       }
+//     );
+//   });
 // });
+
+// 监测网址变化
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//   if (tab.url.indexOf("chrome://") == 0 && changeInfo.status == "loading") {
+//     chrome.browserAction.setPopup({
+//       tabId: tab.id,
+//       popup: 'option/options.html'
+//     });
+//   }
+// });
+// 监听本插件的图标被点击时
+// chrome.browserAction.onClicked.addListener(function (tab) {
+//   chrome.tabs.sendMessage(tab.id, { action: 'page-show-fanyi-inpage' });
+// });
+
+// chrome.webRequest.onCompleted.addListener(function (details) {
+//   // Do something after web request complete
+// }, { urls: ["<all_urls>"] },
+//   ["responseHeaders"]);
 
 // Handle message from page
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -49,12 +65,30 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-chrome.webRequest.onCompleted.addListener(function (details) {
-  // Do something after web request complete
-},
-
-{ urls: ["<all_urls>"] },
-["responseHeaders"]);
+// listen hot key
+chrome.commands.onCommand.addListener(function callback(command) {
+  if (command.indexOf('show-fanyi-inpage') === 0) {
+    chrome.tabs.getSelected(null, function (tab) {
+      console.log("show-fanyi-inpage url:" + tab.url);
+      chrome.tabs.sendMessage(
+        tab.id,
+        { action: "page-show-fanyi-inpage" }
+      );
+    });
+  } else if (command.indexOf('open-work-table') === 0) {
+    chrome.tabs.getSelected(null, function (tab) {
+      console.log("open-work-table url:" + tab.url);
+      // open work table in current tab
+      if (tab.url.indexOf("chrome://newtab") == 0 || tab.url.indexOf("chrome://new-tab-page") == 0) {
+        chrome.tabs.update(tab.id, { url: "https://docs.qq.com/doc/DSEVPY1JJd2NIa2R3" });
+      } else {
+        chrome.tabs.create({ url: 'https://docs.qq.com/doc/DSEVPY1JJd2NIa2R3' });
+      }
+    });
+  } else if (command.indexOf('open-fanyi-on-right') === 0) {
+    openFanyiOnRight();
+  }
+});
 
 function init() {
   Settings.init(function () {

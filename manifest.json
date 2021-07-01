@@ -11,12 +11,13 @@
     "tabs",
     "contextMenus",
     "webRequest",
-    "webRequestBlocking",
+    "system.display",
     "storage"
   ],
   "browser_action": {
     "default_icon": "img/favicon.png",
-    "default_title": "fanyi sidebar"
+    "default_title": "fanyi sidebar",
+    "default_popup": "option/options.html"
   },
   "icons": {
     "24": "img/favicon.png",
@@ -24,10 +25,8 @@
 	},
   "background": {
     "scripts": [
-      "js/lib/jquery-1.10.1.min.js",
-      "js/lib/bootstrap.js",
-      "js/lib/async.js",
       "js/common.js",
+      "js/background_resize.js",
       "js/background.js"
     ],
     "persistent": true
@@ -35,9 +34,10 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*/*"
+        "*://*/*",
+        "file:///*/*"
       ],
-      "all_frames": true,
+      "all_frames": false,
       "run_at": "document_end",
       "js": [
         "js/lib/jquery-1.10.1.min.js",
@@ -54,11 +54,25 @@
     "page.html"
   ],
   "commands": {
-    "test": {
-      "description": "test hotkey",
+    "open-fanyi-on-right": {
+      "description": "open new fanyi on right",
       "suggested_key": {
-        "default": "Ctrl+Shift+Y",
-        "mac": "MacCtrl+Shift+Y"
+        "default": "Alt+Shift+2",
+        "mac": "MacCtrl+Shift+2"
+      }
+    },
+    "open-work-table": {
+      "description": "open work table",
+      "suggested_key": {
+        "default": "Alt+Shift+1",
+        "mac": "MacCtrl+Shift+1"
+      }
+    },
+    "show-fanyi-inpage": {
+      "description": "show fanyi in current page",
+      "suggested_key": {
+        "default": "Alt+Shift+Q",
+        "mac": "MacCtrl+Shift+Q"
       }
     }
   }
