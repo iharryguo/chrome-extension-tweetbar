@@ -89,7 +89,7 @@ if (!window.top.listenerLoaded) {
   chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log('onMessage: ' + request.action)
     if (request.action == "page-show-fanyi-inpage") {
-      Sidebar.open(request);
+      Sidebar.toggle(request);
     }
   });
 
