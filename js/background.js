@@ -85,6 +85,16 @@ chrome.commands.onCommand.addListener(function callback(command) {
         chrome.tabs.create({ url: 'https://docs.qq.com/doc/DSEVPY1JJd2NIa2R3' });
       }
     });
+  }  else if (command.indexOf('open-important-table') === 0) {
+    chrome.tabs.getSelected(null, function (tab) {
+      console.log("open-important-table url:" + tab.url);
+      // open important table(tencent doc stared) in current tab
+      if (tab.url.indexOf("chrome://newtab") == 0 || tab.url.indexOf("chrome://new-tab-page") == 0) {
+        chrome.tabs.update(tab.id, { url: "https://docs.qq.com/desktop/stared" });
+      } else {
+        chrome.tabs.create({ url: 'https://docs.qq.com/desktop/stared' });
+      }
+    });
   } else if (command.indexOf('open-fanyi-on-right') === 0) {
     openFanyiOnRight();
   }
