@@ -17,17 +17,35 @@ function close() {
 }
 
 {
-  // 恢复上次结果
-  var resultHtml = document.getElementById('result');
-  var lastResults = localStorage["LastResults"];
-  if (resultHtml && lastResults)
-    resultHtml.innerHTML = localStorage["LastResults"];
+  // 自动搜索当前剪贴板中的文字，最大只允许 50 个字符。超过的话，就直接呈现上次结果
+  var tempNode = document.createElement("input");
+  document.body.appendChild(tempNode);
+  tempNode.maxLength = 51;
+  tempNode.focus();
+  document.execCommand("paste");
+  var clipboardText = tempNode.value; //this is your clipboard data
+  document.body.removeChild(tempNode);
 
   var worldNode = document.getElementById('word');
-  var lastWord = localStorage["LastWord"];
-  if (worldNode && lastWord) {
-    worldNode.value = lastWord;
-    worldNode.select();
+  if (worldNode) {
+    if (clipboardText && clipboardText.length <= 50) {
+      worldNode.value = clipboardText;
+      worldNode.select();
+      mainQuery(clipboardText, translateXML);
+    } else {
+      // 恢复上次结果
+      var resultHtml = document.getElementById('result');
+      var lastResults = localStorage["LastResults"];
+      if (resultHtml && lastResults)
+        resultHtml.innerHTML = localStorage["LastResults"];
+  
+      var worldNode = document.getElementById('word');
+      var lastWord = localStorage["LastWord"];
+      if (worldNode && lastWord) {
+        worldNode.value = lastWord;
+        worldNode.select();
+      }
+    }
   }
 }
 
