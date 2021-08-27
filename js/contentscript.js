@@ -33,9 +33,9 @@ var Sidebar = {
       } else {
         // show side bar
         mySidebar.style.display = "block";
-        mySidebar.style.opacity = "0.8";
+        mySidebar.style.opacity = "0.9";
         setTimeout(function () {
-          mySidebar.style.opacity = "0.2";
+          mySidebar.style.opacity = "0.4";
         }, 1000);
       }
       return undefined;
@@ -49,10 +49,10 @@ var Sidebar = {
       var funMouseMotion = function (event) {
         if (event.type == "mousemove") {
           console.log('鼠标移入');
-          mySidebar.style.opacity = "0.7";
+          mySidebar.style.opacity = "0.9";
         } else if (event.type == "mouseout") {
           console.log('鼠标移出');
-          mySidebar.style.opacity = "0.2";
+          mySidebar.style.opacity = "0.4";
         }
       };
       mySidebar.onmousemove = funMouseMotion;
@@ -61,7 +61,7 @@ var Sidebar = {
       Sidebar.sidebar = mySidebar;
       document.body.appendChild(Sidebar.sidebar);
       Sidebar.sidebar.style.cssText = Sidebar.CSS_VISIBLE;
-      mySidebar.style.opacity = "0.8";
+      mySidebar.style.opacity = "0.9";
 
       setTimeout(function () {
         // var iframeWindow = document.getElementById("fanyiqq_sidebar_iframe").contentWindow;
@@ -70,7 +70,7 @@ var Sidebar = {
         //   console.log(event.key);
         //   Sidebar.sidebar.style.opacity="0.7";
         // },false);
-        Sidebar.sidebar.style.opacity = "0.2";
+        Sidebar.sidebar.style.opacity = "0.4";
       }, 1000);
       return Sidebar.sidebar;
     }

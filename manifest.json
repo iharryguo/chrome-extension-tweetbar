@@ -12,6 +12,7 @@
     "contextMenus",
     "webRequest",
     "system.display",
+    "clipboardRead",
     "storage"
   ],
   "browser_action": {
