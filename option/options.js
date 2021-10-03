@@ -12,9 +12,6 @@ var Options =
   "playwhenhovering": ["checked", false],
   "playwhenclicking": ["checked", false]
 };
-function close() {
-  window.self.close();
-}
 
 {
   // 自动搜索当前剪贴板中的文字，最大只允许 50 个字符。超过的话，就直接呈现上次结果
@@ -28,9 +25,11 @@ function close() {
 
   var worldNode = document.getElementById('word');
   if (worldNode) {
-    if (clipboardText && clipboardText.length <= 50) {
+    if (clipboardText && clipboardText.length <= 50
+       && clipboardText != localStorage["LastCopy"]) {
       worldNode.value = clipboardText;
       worldNode.select();
+      localStorage["LastCopy"] = clipboardText;
       mainQuery(clipboardText, translateXML);
     } else {
       // 恢复上次结果
@@ -46,7 +45,15 @@ function close() {
         worldNode.select();
       }
     }
+    worldNode.oninput = function(event) {
+      if (worldNode.value == ' ')
+        window.close();
+    };
   }
+
+  // 半透明
+  // var myBody = document.getElementById("my_body");
+  // myBody.style.opacity = "0.4";
 }
 
 var phonetic = "";
@@ -190,6 +197,11 @@ function translateXML(xmlnode) {
     }
   }
   mainFrameQuery();
+
+  // select the word, for quick inputting next word
+  var worldNode = document.getElementById('word');
+  if (worldNode)
+    worldNode.select();
   return;
 }
 var _word;
@@ -381,4 +393,6 @@ document.getElementById("playwhenclicking").onclick = function () { save_options
 document.getElementById("feedback").onclick = function () { goFeedback(); };
 document.getElementById("about").onclick = function () { goAbout(); };
 document.getElementById("word").onkeydown = function () { if (event.keyCode == 13) mainQuery(document.getElementsByName("word")[0].value, translateXML); };
-document.getElementById("querybutton").onclick = function () { mainQuery(document.getElementsByName("word")[0].value, translateXML); };
+document.getElementById("querybutton").onclick = function () {
+   mainQuery(document.getElementsByName("word")[0].value, translateXML);
+};
