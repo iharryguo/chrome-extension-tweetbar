@@ -1,6 +1,7 @@
 ﻿/**
  * @author Dongxu Huang
  * @date   2010-2-21
+ * @date   2023-2-26 引入了 speech.js 为了 playAudio('http://dict.youdao.com/dictvoice?audio=' + word + '&type=1')
  */
 
 var Options =
@@ -196,6 +197,9 @@ function translateXML(xmlnode) {
       webtrans += webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "<br/>";
     }
   }
+  // 发音音频： type=1 英音； type=2 美音
+  playAudio('http://dict.youdao.com/dictvoice?audio=' + retphrase + '&type=2');
+  // 重置一些状态
   mainFrameQuery();
 
   // select the word, for quick inputting next word
