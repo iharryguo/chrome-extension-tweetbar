@@ -58,9 +58,12 @@ var Options =
 }
 
 var phonetic = "";
+var phoneticHistory = ""; // 用于保存历史记录
 var retphrase = "";
 var basetrans = "";
+var basetransHistory = ""; // 用于保存历史记录
 var webtrans = "";
+var webtransHistory = ""; // 用于保存历史记录
 var noBaseTrans = false;
 var noWebTrans = false;
 function isChinese(temp) {
@@ -128,6 +131,7 @@ function translateXML(xmlnode) {
       phouk = root.getElementsByTagName("uk-phonetic-symbol")[0].childNodes[0].nodeValue;
     if (phouk != null) {
       phonetic += "英[" + phouk + "]";
+      phoneticHistory = phonetic;
     }
   }
   var phous = "";
@@ -140,6 +144,7 @@ function translateXML(xmlnode) {
         phonetic += (phonetic.length >= 25 ? "<br/>" : "&nbsp;&nbsp;");
       }
       phonetic += "美[" + phous + "]<br/>";
+      phoneticHistory += " 美[" + phous + "]";
     }
   }
   // 补充换行符
@@ -151,6 +156,7 @@ function translateXML(xmlnode) {
         var pho = root.getElementsByTagName("phonetic-symbol")[0].childNodes[0].nodeValue;
       if (pho != null) {
         phonetic += "注音[" + pho + "]<br/>";
+        phoneticHistory += "  注音[" + pho + "]";
       }
     }
   }
@@ -173,16 +179,17 @@ function translateXML(xmlnode) {
     }
 
     for (var i = 0; i < translations.length; i++) {
-      var line = translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue + "<br/>";
+      var line = translations[i].getElementsByTagName("content")[0].childNodes[0].nodeValue;
+      basetransHistory += ("    " + line + "\n");
+      line += "<br/>";
       if (line.length > 50) {
         var reg = /[;；]/;
         var childs = line.split(reg);
         line = '';
-        for (var i = 0; i < childs.length; i++)
-          line += childs[i] + "<br/>";
+        for (var j = 0; j < childs.length; j++)
+          line += childs[j] + "<br/>";
       }
       basetrans += line;
-
     }
   }
   if (noWebTrans == false) {
@@ -193,13 +200,13 @@ function translateXML(xmlnode) {
     }
 
     for (var i = 0; i < webtranslations.length; i++) {
-      webtrans += webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue + ":  ";
-      webtrans += webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue + "<br/>";
+      var key = webtranslations[i].getElementsByTagName("key")[0].childNodes[0].nodeValue + ": ";
+      webtrans += key;
+      var value = webtranslations[i].getElementsByTagName("trans")[0].getElementsByTagName("value")[0].childNodes[0].nodeValue;
+      webtrans += (value + "<br/>");
+      webtransHistory += ("    " + key + value + "\n");
     }
   }
-  // 发音音频： type=1 英音； type=2 美音
-  playAudio('http://dict.youdao.com/dictvoice?audio=' + retphrase + '&type=2');
-  // 重置一些状态
   mainFrameQuery();
 
   // select the word, for quick inputting next word
@@ -231,6 +238,25 @@ function removeDiv(divname) {
   if (div == null) return;
   div.parentNode.removeChild(div);
 }
+
+/**
+ * @str: 待查找的字符串
+ * @substr: 查找内容
+ * @times: 指定第几次出现
+ */
+function findPosition(str, substr, times = 1) {
+  var start = 0;
+  var pos = -1;
+  for (var i = 0; i < times; i++) {
+    pos = str.indexOf(substr, start);
+    if (pos == -1)
+      break;
+    else
+      start = pos + substr.length;
+  }
+  return pos;
+}
+
 function mainFrameQuery() {
   removeDiv('opt_text');
   removeDiv('opt_text');
@@ -251,37 +277,73 @@ function mainFrameQuery() {
   if (noBaseTrans == false) {
     phonetic = "<strong>音标:</strong><br/>" + phonetic;
     res.innerHTML = phonetic;
-    if (langType == 'ko')
+    if (langType == 'ko') {
       basetrans = "<strong>韩汉翻译:</strong><br/>" + basetrans;
-    else if (langType == 'jap')
+      basetransHistory = "  [韩汉翻译]:\n" + basetransHistory;
+    }
+    else if (langType == 'jap') {
       basetrans = "<strong>日汉翻译:</strong><br/>" + basetrans;
-    else if (langType == 'fr')
+      basetransHistory = "  [日汉翻译]:\n" + basetransHistory;
+    }
+    else if (langType == 'fr') {
       basetrans = "<strong>法汉翻译:</strong><br/>" + basetrans;
-    else
+      basetransHistory = "  [法汉翻译]:\n" + basetransHistory;
+    }
+    else {
       basetrans = "<strong>英汉翻译:</strong><br/>" + basetrans;
+      basetransHistory = "  [英汉翻译]:\n" + basetransHistory;
+    }
     res.innerHTML += basetrans;
   }
   if (noWebTrans == false) {
     webtrans = "<strong>网络释义:</strong><br/>" + webtrans;
+    webtransHistory = "  [网络释义]:\n" + webtransHistory;
     res.innerHTML += webtrans;
   }
   if (noBaseTrans == false || noWebTrans == false) {
     res.innerHTML += "<a href ='http://dict.youdao.com/search?q=" + encodeURIComponent(_word) + "&ue=utf8&keyfrom=chrome.extension" + lan + "' target=_blank>点击 查看详细释义</a>";
   }
+  // 发音音频： type=1 英音； type=2 美音
+  playAudio('http://dict.youdao.com/dictvoice?audio=' + retphrase + '&type=2');
+
+  var worldNode = document.getElementById('word');
   if (noBaseTrans && noWebTrans) {
     res.innerHTML = "未找到英汉翻译!";
     res.innerHTML += "<br><a href ='http://www.youdao.com/search?q=" + encodeURIComponent(_word) + "&ue=utf8&keyfrom=chrome.extension' target=_blank>尝试用有道搜索</a>";
+  } else {
+    // 保存所有查询记录（上限：总字数不大于200K。总字数大于150K时，就提示）
+    // allQueryRes： just for short
+    var allQueryRes = localStorage["AllQueryRes"];
+    if (!allQueryRes) {
+      localStorage["AllQueryRes"] = '';
+      allQueryRes = '';
+    }
+    var wordSep = "---------------------";
+    if (allQueryRes && allQueryRes.length > 130*1000) {
+      if (allQueryRes.length > 200*1000) {
+        // 找到第 10 个单词所在的位置。一次淘汰10个单词，大约每隔10次做一次淘汰
+        var nextWordPos = findPosition(allQueryRes, wordSep, 10);
+        localStorage["AllQueryRes"] = allQueryRes.substr(nextWordPos);
+        res.innerHTML = "<strong style='color:red'>历史记录超过200K，最早的记录已被清空~~</strong><br/>" + res.innerHTML;
+      } else {
+        res.innerHTML = "<strong>历史记录已达 " + allQueryRes.length + " ，请及时导出（超出200K就将清空）！！！</strong><br/>" + res.innerHTML;
+      }
+    }
+    localStorage["AllQueryRes"] += (wordSep + '\n【 ' + worldNode.value + ' 】: ' + phoneticHistory + "\n" + basetransHistory + "\n" + webtransHistory + '\n\n');
   }
 
   // 保存结果
-  var worldNode = document.getElementById('word');
   if (worldNode)
     localStorage["LastWord"] = worldNode.value;
   localStorage["LastResults"] = res.innerHTML;
+
   phonetic = '';
+  phoneticHistory = '';
   retphrase = '';
   webtrans = '';
+  webtransHistory = '';
   basetrans = '';
+  basetransHistory = '';
   _word = '';
   langType = '';
   noBaseTrans = false;

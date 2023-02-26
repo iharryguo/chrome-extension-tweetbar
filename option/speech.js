@@ -14,10 +14,6 @@ var _audioPlayer = function () {
     var _t = +new Date - _audioStartTime;
     // audio.removeEventListener("playing", whenAudioPlay, false);
     // console.log('audio playing, ', _t)
-    _rlog.push(["_trackCustom", "actions", [
-      ['audio_play_click_to_playing', _t],
-      ['audio_play_src', this.getAttribute('src')]
-    ]]);
   }
   audio.addEventListener("playing", whenAudioPlay, false);
   return audio;
