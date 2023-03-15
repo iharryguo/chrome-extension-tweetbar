@@ -242,7 +242,7 @@ function removeDiv(divname) {
 /**
  * @str: 待查找的字符串
  * @substr: 查找内容
- * @times: 指定第几次出现
+ * @times: 指定第几次出现 首次为0，从第0次开始
  */
 function findPosition(str, substr, times = 1) {
   var start = 0;
@@ -314,22 +314,34 @@ function mainFrameQuery() {
     // 保存所有查询记录（上限：总字数不大于200K。总字数大于150K时，就提示）
     // allQueryRes： just for short
     var allQueryRes = localStorage["AllQueryRes"];
-    if (!allQueryRes) {
+    if (!allQueryRes || allQueryRes == '') {
       localStorage["AllQueryRes"] = '';
+      // AllQueryResCount 记录的总查询单词数
+      localStorage["AllQueryResCount"] = 0;
       allQueryRes = '';
-    }
-    var wordSep = "---------------------";
+    } else if (!localStorage["AllQueryResCount"])
+      localStorage["AllQueryResCount"] = 0;
+    var wordSep = "---------------------------------------";
     if (allQueryRes && allQueryRes.length > 130*1000) {
       if (allQueryRes.length > 200*1000) {
         // 找到第 10 个单词所在的位置。一次淘汰10个单词，大约每隔10次做一次淘汰
         var nextWordPos = findPosition(allQueryRes, wordSep, 10);
         localStorage["AllQueryRes"] = allQueryRes.substr(nextWordPos);
+        localStorage["AllQueryResCount"] -=10;
         res.innerHTML = "<strong style='color:red'>历史记录超过200K，最早的记录已被清空~~</strong><br/>" + res.innerHTML;
       } else {
-        res.innerHTML = "<strong>历史记录已达 " + allQueryRes.length + " ，请及时导出（超出200K就将清空）！！！</strong><br/>" + res.innerHTML;
+        res.innerHTML = "<strong style='color:orange'>历史记录已达 " + allQueryRes.length + " ，请及时导出（超出200K就将清空）！！！</strong><br/>" + res.innerHTML;
       }
     }
-    localStorage["AllQueryRes"] += (wordSep + '\n【 ' + worldNode.value + ' 】: ' + phoneticHistory + "\n" + basetransHistory + "\n" + webtransHistory + '\n\n');
+	var vtime = new Date();
+	var timestamp = vtime.toDateString() + " " + vtime.toLocaleTimeString();
+    var egurl = "http://dict.youdao.com/example/blng/eng/" + encodeURIComponent(worldNode.value);
+    localStorage["AllQueryRes"] += (
+      '[' + localStorage["AllQueryResCount"] + ']' +
+      wordSep + timestamp + '\n【 ' + worldNode.value + ' 】: ' + 
+      phoneticHistory + "\n" + basetransHistory + "\n" + webtransHistory + "\n[例句]： " + egurl + '\n\n'
+    );
+    localStorage["AllQueryResCount"]++;
   }
 
   // 保存结果
@@ -449,7 +461,16 @@ function restore_options() {
 
 }
 
-document.body.onload = function () { restore_options(); document.getElementById('word').focus(); changeIcon(); };
+document.body.onload = function () {
+  if (location.search == "?action=showhistory") {
+    // 输出查询记录
+    document.body.innerText = localStorage["AllQueryRes"];  
+  } else {
+    restore_options();
+    document.getElementById('word').focus();
+    changeIcon();
+  }
+};
 document.getElementById("dict_disable").onclick = function () { save_options(); };
 document.getElementById("ctrl_only").onclick = function () { save_options(); };
 document.getElementById("english_only").onclick = function () { save_options(); };
