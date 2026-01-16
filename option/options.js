@@ -526,8 +526,8 @@ document.getElementById("english_only").onclick = function () { save_options(); 
 document.getElementById("autoplay").onclick = function () { save_options(); };
 document.getElementById("playwhenhovering").onclick = function () { save_options(); };
 document.getElementById("playwhenclicking").onclick = function () { save_options(); };
-document.getElementById("feedback").onclick = function () { goFeedback(); };
-document.getElementById("about").onclick = function () { goAbout(); };
+// document.getElementById("feedback").onclick = function () { goFeedback(); };
+// document.getElementById("about").onclick = function () { goAbout(); };
 document.getElementById("word").onkeydown = function () { if (event.keyCode == 13) mainQuery(document.getElementsByName("word")[0].value, translateXML); };
 document.getElementById("querybutton").onclick = function () {
    mainQuery(document.getElementsByName("word")[0].value, translateXML);
