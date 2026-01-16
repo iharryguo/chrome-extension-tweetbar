@@ -1,7 +1,45 @@
 // -------------------------------------------------------------------------------------------
 // Bellow is resize code
 // -------------------------------------------------------------------------------------------
-function openFanyiOnRight() {
+export { openFanyiOnRight };
+
+// 在文件顶部添加此函数
+function getResizeParams(command) {
+    const params = {
+        primaryRatio: 7,    // 默认主窗口占70%
+        secondaryRatio: 3,  // 副窗口占30%
+        orientation: 'horizontal',
+        rows: 1,
+        cols: 2
+    };
+
+    if (command.includes('scale')) {
+        // 如果有缩放参数，解析具体比例
+        const scaleMatch = command.match(/scale-(\d+)-(\d+)/);
+        if (scaleMatch) {
+            params.primaryRatio = parseInt(scaleMatch[1]);
+            params.secondaryRatio = parseInt(scaleMatch[2]);
+        }
+        
+        // 检查方向参数
+        if (command.includes('vertical')) {
+            params.orientation = 'vertical';
+        }
+    }
+    
+    // 其他命令可能修改rows和cols
+    if (command.includes('grid')) {
+        const gridMatch = command.match(/grid-(\d+)x(\d+)/);
+        if (gridMatch) {
+            params.rows = parseInt(gridMatch[1]);
+            params.cols = parseInt(gridMatch[2]);
+        }
+    }
+
+    return params;
+}
+
+function openFanyiOnRight(command) {
 	if(chrome.system && chrome.system.display) {
 		chrome.system.display.getInfo(function(displayInfo){
 			chrome.windows.getCurrent(function(windowInfo) {
@@ -22,7 +60,7 @@ function openFanyiOnRight() {
 			});
 		});
 	};
-  chrome.tabs.create({ url: 'https://fanyi.qq.com/' });
+  chrome.tabs.create({ url: 'https://www.kdocs.cn/latest' });
 }
 var util = {
 	/**
@@ -191,7 +229,7 @@ var util = {
 				tabsStore.push(tabsArray[x].id);
 			}
 			lastTab.lastTabsArray = tabsStore;
-			localStorage.setItem('lastTab',JSON.stringify(lastTab));
+			chrome.storage.local.set('lastTab',JSON.stringify(lastTab));
 			chrome.runtime.sendMessage('enable-undo');
 			cb();
 		});
@@ -203,14 +241,14 @@ var util = {
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
 	updateUndoStorage: function(resize, tabsArray) {
-		var currentLastTab = JSON.parse(localStorage.getItem('lastTab'));
+		var currentLastTab = JSON.parse(chrome.storage.local.get('lastTab'));
 		var tabsStore = [];
 		for(var x=0; x<tabsArray.length; x++){
 			tabsStore.push(tabsArray[x].id);
 		}
 		if(currentLastTab){
 			currentLastTab.lastTabsArray = tabsStore;
-			localStorage.setItem('lastTab',JSON.stringify(currentLastTab));
+			chrome.storage.local.set('lastTab',JSON.stringify(currentLastTab));
 			chrome.runtime.sendMessage('enable-undo');
 		}
 	},
@@ -225,7 +263,7 @@ var util = {
 	*/
 	undoResize: function(resize,callback) {
 		var that = this,
-			lastTab = localStorage.getItem('lastTab');
+			lastTab = chrome.storage.local.get('lastTab');
 
 		//undo not available
 		if(!lastTab){
@@ -458,17 +496,17 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 }
 
 function initResizePreferences(resize){
-	var singleTabValue = localStorage.getItem('singleTab');
+	var singleTabValue = chrome.storage.local.get('singleTab');
 	if(singleTabValue && singleTabValue === 'true'){
 		resize.singleTab = true;
 	}
 
-	var emptyTabValue = localStorage.getItem('emptyTab');
+	var emptyTabValue = chrome.storage.local.get('emptyTab');
 	if(!emptyTabValue || emptyTabValue === 'true'){
 		resize.emptyTab = true;
 	}
 
-	var alignmentValue = localStorage.getItem('alignment');
+	var alignmentValue = chrome.storage.local.get('alignment');
 	if(!alignmentValue){
 		resize.alignment = 'left';
 	} else {

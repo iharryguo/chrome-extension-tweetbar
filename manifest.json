@@ -1,12 +1,12 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Fanyi English Dictionary",
   "description": "Chrome extension to show dictionary on web page",
   "version": "0.0.1",
   "options_page": "page.html?page=settings",
   "permissions": [
+    "scripting",
     "management",
-    "*://*/*",
     "activeTab",
     "tabs",
     "contextMenus",
@@ -15,7 +15,7 @@
     "clipboardRead",
     "storage"
   ],
-  "browser_action": {
+  "action": {
     "default_icon": "img/favicon.png",
     "default_title": "Fanyi Dictionary",
     "default_popup": "option/options.html"
@@ -25,12 +25,8 @@
     "64": "img/favicon64.png"
 	},
   "background": {
-    "scripts": [
-      "js/common.js",
-      "js/background_resize.js",
-      "js/background.js"
-    ],
-    "persistent": true
+  "service_worker": "background.js",
+  "type": "module"
   },
   "content_scripts": [
     {
@@ -39,7 +35,7 @@
         "file:///*/*"
       ],
       "all_frames": false,
-      "run_at": "document_end",
+      "run_at": "document_start",
       "js": [
         "js/lib/jquery-1.10.1.min.js",
         "js/lib/async.js",
@@ -51,9 +47,13 @@
       ]
     }
   ],
-  "web_accessible_resources": [
-    "page.html"
-  ],
+"web_accessible_resources": [
+  {
+    "resources": ["page.html"],
+    "matches": ["<all_urls>"],
+    "use_dynamic_url": true
+  }
+],
   "commands": {
     "open-work-table": {
       "description": "open work table",
@@ -70,7 +70,7 @@
       }
     },
     "open-fanyi-on-right": {
-      "description": "open new fanyi on right",
+      "description": "open new KDoc 金山文档",
       "suggested_key": {
         "default": "Alt+Shift+3",
         "mac": "MacCtrl+Shift+3"

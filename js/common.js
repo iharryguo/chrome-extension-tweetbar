@@ -1,4 +1,5 @@
-var Settings = {
+// 必须添加export语句
+export const Settings = {
   // set to false for development
   ONLINE: true,
   UI_TIMEOUT: 2000,

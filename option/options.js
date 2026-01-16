@@ -14,6 +14,30 @@ var Options =
   "playwhenclicking": ["checked", false]
 };
 
+function checkClipboard () {
+	// 这个不得行，提示 read permission denied
+	// navigator.clipboard.readText().then (v=>{console.log("xx", v)});
+	// 自动搜索当前剪贴板中的文字，最大只允许 50 个字符
+	var tempNode = document.createElement("input");
+	document.body.appendChild(tempNode);
+	tempNode.maxLength = 51;
+	tempNode.focus();
+	document.execCommand("paste");
+	var clipboardText = tempNode.value; //this is your clipboard data
+	document.body.removeChild(tempNode);
+
+	var worldNode = document.getElementById('word');
+	if (worldNode) {
+		if (clipboardText && clipboardText.length <= 50
+			&& clipboardText != localStorage["LastCopy"]) {
+			worldNode.value = clipboardText;
+			worldNode.select();
+			localStorage["LastCopy"] = clipboardText;
+			mainQuery(clipboardText, translateXML);
+		}
+	}
+}
+
 {
   // 自动搜索当前剪贴板中的文字，最大只允许 50 个字符。超过的话，就直接呈现上次结果
   var tempNode = document.createElement("input");
@@ -51,6 +75,31 @@ var Options =
         window.close();
     };
   }
+  
+  var intervalNo = 0;
+  document.addEventListener('visibilitychange', state => {
+	  console.log("visibilitychange " + document.visibilityState);
+	  if (document.visibilityState == 'hidden') {
+		  console.log("checkClipboard start");
+		  intervalNo = setInterval(checkClipboard, 500);
+	  } else if (intervalNo != 0) {
+		  console.log("checkClipboard end");
+		  clearInterval(intervalNo);
+		  intervalNo = 0;
+	  }
+  });
+
+  document.addEventListener('focus', state => {
+	  console.log("xxx " + state);
+	  if (document.visibilityState == 'hidden') {
+		  console.log("checkClipboard start");
+		  intervalNo = setInterval(checkClipboard, 500);
+	  } else if (intervalNo != 0) {
+		  console.log("checkClipboard end");
+		  clearInterval(intervalNo);
+		  intervalNo = 0;
+	  }
+  });
 
   // 半透明
   // var myBody = document.getElementById("my_body");

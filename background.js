@@ -3,9 +3,27 @@
  * page.js and dispatcher to contentscript.js
  */
 
+import { Settings } from './js/common.js';
+import { openFanyiOnRight } from './js/background_resize.js';
+
+console.log('background.js Service Worker已加载');
+// 强制保持SW活跃
+const keepAlive = () => {
+  // chrome.runtime.sendMessage({type: 'ping'});
+  console.log('background.js keepAlive');
+  return setTimeout(keepAlive, 10000);
+};
+keepAlive();
+
+// 添加错误捕获
+self.addEventListener('error', (e) => {
+  console.error('SW全局错误:', e);
+});
+
 var manifest = chrome.runtime.getManifest();
 
 if (chrome.runtime.onInstalled) {
+  console.log('background.js onInstalled');
   chrome.runtime.onInstalled.addListener(function () {
     Settings.save(Settings.DEFAULT);
   });
@@ -67,6 +85,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // listen hot key
 chrome.commands.onCommand.addListener(function callback(command) {
+  console.log("收到命令:" + command);
   if (command.indexOf('show-fanyi-inpage') === 0) {
     chrome.tabs.getSelected(null, function (tab) {
       console.log("show-fanyi-inpage url:" + tab.url);
@@ -96,7 +115,7 @@ chrome.commands.onCommand.addListener(function callback(command) {
       }
     });
   } else if (command.indexOf('open-fanyi-on-right') === 0) {
-    openFanyiOnRight();
+    openFanyiOnRight(command);
   }
 });
 
